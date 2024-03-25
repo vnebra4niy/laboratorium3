@@ -1,54 +1,38 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const path = require('path')
 
-const app = express();
-app.use(bodyParser.urlencoded({ extended: true }))
+const app = express()
+
+app.set('views', path.join(__dirname, 'views'))
+
+app.set('view engine', 'ejs')
+
+app.use(bodyParser.urlencoded({ extended: false }))
 
 let students = []
 
-app.get('/home', (req, res) => {
-  res.send('<title>HOME</title><body><p>HOME</p></body>')
+app.post('/student', (req, res) => {
+    const { firstName, lastName, major } = req.body
+    students.push({ firstName, lastName, major })
+    res.render('student', { firstName, lastName, major })
+})
+
+app.get('/student', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'student.ejs'))
+})
+
+app.get('/users', (req, res) => {
+    res.render('users', { userList: students })
 })
 
 app.get('/add-student', (req, res) => {
-    const htmlCode=`
-    <title>ADD-STUDENT</title>
-    <body>
-        <p>ADD-STUDENT</p>
-        <form action="/student" method="POST">
-            <label for="firstName">First Name:</label>
-            <input type="text" id="firstName" name="firstName"><br><br>
-            <label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" name="lastName"><br><br>
-            <label for="major">Major:</label>
-            <input type="text" id="major" name="major"><br><br>
-            <button type="submit">Submit</button>
-        </form>
-    </body>
-    `
-  res.send(htmlCode);
+    res.sendFile(path.join(__dirname, 'views', 'add-student.html'))
 })
 
-app.post('/student', (req, res) => {
-  const { firstName, lastName, major } = req.body
-  const greeting = `Hello, ${firstName} ${lastName} on ${major} studies!`
-  students.push({ firstName, lastName, major })
-  res.send(greeting)
-});
-
-app.get('/users', (req, res) => {
-  const userList = students.map(student => `<p>${student.firstName} ${student.lastName} - ${student.major}</p>`)
-  res.send(`<title>USERS</title><body><ul>${userList.join('')}</ul></body>`)
-})
-
-app.post('/student', (req, res) => {
-  const { firstName, lastName, major } = req.body
-  const greeting = `Hello, ${firstName} ${lastName} on ${major} studies!`
-  students.push({ firstName, lastName, major })
-  res.send(greeting)
-});
+app.use(express.static(path.join(__dirname, 'public')))
 
 const PORT = 3000
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
-})
+    console.log(`Server is running on port ${PORT}`)
+});

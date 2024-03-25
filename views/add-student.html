@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Student</title>
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
     <div class="navigation">
@@ -13,5 +13,14 @@
         <a href="/add-student" class="nav-link">Add Student</a>
     </div>
     <h1>Add Student</h1>
+    <form action="/student" method="POST">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName"><br><br>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName"><br><br>
+        <label for="major">Major:</label>
+        <input type="text" id="major" name="major"><br><br>
+        <button type="submit">Submit</button>
+    </form>
 </body>
 </html>
